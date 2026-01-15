@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2024 Project Infinity X
+     SPDX-License-Identifier: Apache-2.0
+-->
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+
+    <!-- Tombol yang menyalin URL ke log aplikasi yang crash -->
+    <string name="aerr_copy">Salin URL log error</string>
+    <string name="url_copy_success">URL berhasil disalin</string>
+    <string name="url_copy_failed">Terjadi error saat mengunggah log ke Pasty</string>
+
+    <!-- Restart SystemUI -->
+    <string name="systemui_restart_title">Perlu restart SystemUI</string>
+    <string name="systemui_restart_message">Agar semua perubahan berlaku, diperlukan restart SystemUI. Restart SystemUI sekarang?</string>
+        
+    <!-- Restart Sistem -->
+    <string name="system_restart_title">Perlu restart sistem</string>
+    <string name="system_restart_message">Agar semua perubahan berlaku, diperlukan restart sistem. Lakukan restart sistem sekarang?</string>
+    
+    <!-- Antarmuka kesehatan -->
+    <string name="charging_control_notification_channel">Kontrol pengisian</string>
+    <string name="charging_control_notification_title">Kontrol pengisian</string>
+    <string name="charging_control_notification_cancel_once">Batal</string>
+    <string name="charging_control_notification_content_limit">Baterai akan diisi hingga %1$d%%</string>
+    <string name="charging_control_notification_content_limit_reached">Baterai telah terisi hingga %1$d%%</string>
+    <string name="charging_control_notification_content_target">Baterai akan terisi penuh pada %1$s</string>
+    <string name="charging_control_notification_content_target_reached">Baterai telah terisi</string>
+
+    <!-- Reboot lanjutan -->
+    <string name="reboot_to_recovery_title">Recovery</string>
+    <string name="reboot_to_recovery_message">Reboot ke recovery</string>
+    <string name="reboot_to_bootloader_title">Bootloader</string>
+    <string name="reboot_to_bootloader_message">Reboot ke bootloader</string>
+    <string name="reboot_title">Reboot</string>
+    <string name="reboot_message">Reboot sistem</string>
+
+    <!-- Kunci gestur -->
+    <string name="gesture_locked_warning">Geser lagi untuk membuka kunci gestur</string>
+
+    <!-- Siklus mode dering -->
+    <string name="volume_dialog_ringer_guidance_normal">Panggilan dan notifikasi akan berbunyi</string>
+
+    <!-- Kunci aplikasi -->
+    <string name="unlock_application">Buka kunci <xliff:g id="label" example="Telegram">%1$s</xliff:g></string>
+    
+    <!-- Mode Tidur -->
+    <string name="notification_channel_sleep">Mode Tidur</string>
+    <string name="sleep_mode_notification_title">Mode tidur diaktifkan</string>
+    <string name="sleep_mode_notification_content">Ketuk untuk mematikan mode tidur</string>
+    <string name="sleep_mode_enabled_toast">Mode tidur dihidupkan</string>
+    <string name="sleep_mode_disabled_toast">Mode tidur dimatikan</string>
+
+    <!-- Restart Pengaturan -->
+    <string name="settings_restart_title">Perlu restart Aplikasi Pengaturan</string>
+    <string name="settings_restart_message">Agar semua perubahan berlaku, diperlukan restart Aplikasi Pengaturan. Restart Aplikasi Pengaturan sekarang?</string>
+</resources>

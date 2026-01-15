@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2024 Project Infinity X
+     SPDX-License-Identifier: Apache-2.0
+-->
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+
+    <!-- Button that copies the url to the log of a crashed application -->
+    <string name="aerr_copy">Sao chép URL nhật ký lỗi</string>
+    <string name="url_copy_success">Đã sao chép URL thành công</string>
+    <string name="url_copy_failed">Lỗi xảy ra khi tải nhật ký lên Pasty</string>
+
+    <!-- SystemUI Restart -->
+    <string name="systemui_restart_title">Yêu cầu khởi động lại SystemUI</string>
+    <string name="systemui_restart_message">Để áp dụng tất cả thay đổi, cần khởi động lại SystemUI. Khởi động lại SystemUI ngay bây giờ?</string>
+        
+    <!-- System Reboot -->
+    <string name="system_restart_title">Yêu cầu khởi động lại hệ thống</string>
+    <string name="system_restart_message">Để áp dụng tất cả thay đổi, cần khởi động lại hệ thống. Khởi động lại hệ thống ngay bây giờ?</string>
+    
+    <!-- Health interface -->
+    <string name="charging_control_notification_channel">Kiểm soát sạc</string>
+    <string name="charging_control_notification_title">Kiểm soát sạc</string>
+    <string name="charging_control_notification_cancel_once">Hủy</string>
+    <string name="charging_control_notification_content_limit">Pin sẽ được sạc đến %1$d%%</string>
+    <string name="charging_control_notification_content_limit_reached">Pin đã được sạc đến %1$d%%</string>
+    <string name="charging_control_notification_content_target">Pin sẽ được sạc đầy lúc %1$s</string>
+    <string name="charging_control_notification_content_target_reached">Pin đã được sạc đầy</string>
+
+    <!-- Advanced reboot -->
+    <string name="reboot_to_recovery_title">Recovery</string>
+    <string name="reboot_to_recovery_message">Đang khởi động vào Recovery</string>
+    <string name="reboot_to_bootloader_title">Bootloader</string>
+    <string name="reboot_to_bootloader_message">Đang khởi động vào Bootloader</string>
+    <string name="reboot_title">Khởi động lại</string>
+    <string name="reboot_message">Đang khởi động lại hệ thống</string>
+
+    <!-- Lock gesture -->
+    <string name="gesture_locked_warning">Vuốt lần nữa để mở khóa cử chỉ</string>
+
+    <!-- Cycle through ringer modes -->
+    <string name="volume_dialog_ringer_guidance_normal">Cuộc gọi và thông báo sẽ phát âm thanh</string>
+
+    <!-- App lock -->
+    <string name="unlock_application">Mở khóa <xliff:g id="label" example="Telegram">%1$s</xliff:g></string>
+    
+    <!-- Sleep Mode -->
+    <string name="notification_channel_sleep">Chế độ ngủ</string>
+    <string name="sleep_mode_notification_title">Đã bật chế độ ngủ</string>
+    <string name="sleep_mode_notification_content">Chạm để tắt chế độ ngủ</string>
+    <string name="sleep_mode_enabled_toast">Đã bật chế độ ngủ</string>
+    <string name="sleep_mode_disabled_toast">Đã tắt chế độ ngủ</string>
+
+    <!-- Settings Restart -->
+    <string name="settings_restart_title">Yêu cầu khởi động lại Cài đặt</string>
+    <string name="settings_restart_message">Để áp dụng tất cả thay đổi, cần khởi động lại ứng dụng Cài đặt. Khởi động lại ứng dụng Cài đặt ngay bây giờ?</string>
+</resources>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     حقوق النشر (C) 2024 Project Infinity X
+     SPDX-License-Identifier: Apache-2.0
+-->
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+
+    <!-- Button that copies the url to the log of a crashed application -->
+    <string name="aerr_copy">نسخ رابط سجل التعطل</string>
+    <string name="url_copy_success">تم نسخ الرابط بنجاح</string>
+    <string name="url_copy_failed">حدث خطأ أثناء رفع السجل إلى Pasty</string>
+
+    <!-- SystemUI Restart -->
+    <string name="systemui_restart_title">يتطلب إعادة تشغيل SystemUI</string>
+    <string name="systemui_restart_message">لتنفيذ جميع التغييرات، يلزم إعادة تشغيل SystemUI. إعادة تشغيل SystemUI الآن؟</string>
+        
+    <!-- System Reboot -->
+    <string name="system_restart_title">يتطلب إعادة تشغيل النظام</string>
+    <string name="system_restart_message">لتنفيذ جميع التغييرات، يلزم إعادة تشغيل النظام. تنفيذ إعادة تشغيل النظام الآن؟</string>
+    
+    <!-- Health interface -->
+    <string name="charging_control_notification_channel">تحكم الشحن</string>
+    <string name="charging_control_notification_title">تحكم الشحن</string>
+    <string name="charging_control_notification_cancel_once">إلغاء</string>
+    <string name="charging_control_notification_content_limit">سيتم شحن البطارية إلى %1$d%%</string>
+    <string name="charging_control_notification_content_limit_reached">تم شحن البطارية إلى %1$d%%</string>
+    <string name="charging_control_notification_content_target">سيتم شحن البطارية بالكامل عند %1$s</string>
+    <string name="charging_control_notification_content_target_reached">تم شحن البطارية</string>
+
+    <!-- Advanced reboot -->
+    <string name="reboot_to_recovery_title">وضع الاسترداد</string>
+    <string name="reboot_to_recovery_message">جاري إعادة التشغيل إلى وضع الاسترداد</string>
+    <string name="reboot_to_bootloader_title">برنامج الإقلاع</string>
+    <string name="reboot_to_bootloader_message">جاري إعادة التشغيل إلى برنامج الإقلاع</string>
+    <string name="reboot_title">إعادة التشغيل</string>
+    <string name="reboot_message">جاري إعادة تشغيل النظام</string>
+
+    <!-- Lock gesture -->
+    <string name="gesture_locked_warning">اسحب مرة أخرى لفتح قفل الإيماءات</string>
+
+    <!-- Cycle through ringer modes -->
+    <string name="volume_dialog_ringer_guidance_normal">سيرن المكالمات والإشعارات</string>
+
+    <!-- App lock -->
+    <string name="unlock_application">فتح قفل <xliff:g id="label" example="Telegram">%1$s</xliff:g></string>
+    
+    <!-- Sleep Mode -->
+    <string name="notification_channel_sleep">وضع النوم</string>
+    <string name="sleep_mode_notification_title">تم تفعيل وضع النوم</string>
+    <string name="sleep_mode_notification_content">انقر لإيقاف وضع النوم</string>
+    <string name="sleep_mode_enabled_toast">تم تشغيل وضع النوم</string>
+    <string name="sleep_mode_disabled_toast">تم إيقاف وضع النوم</string>
+
+    <!-- Settings Restart -->
+    <string name="settings_restart_title">يتطلب إعادة تشغيل الإعدادات</string>
+    <string name="settings_restart_message">لتنفيذ جميع التغييرات، يلزم إعادة تشغيل تطبيق الإعدادات. إعادة تشغيل تطبيق الإعدادات الآن؟</string>
+</resources>

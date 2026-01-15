@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2024 Project Infinity X
+     SPDX-License-Identifier: Apache-2.0
+-->
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+
+    <!-- Кнопка копирования URL лога упавшего приложения -->
+    <string name="aerr_copy">Копировать URL лога ошибки</string>
+    <string name="url_copy_success">URL успешно скопирован</string>
+    <string name="url_copy_failed">Ошибка при загрузке лога в Pasty</string>
+
+    <!-- Перезапуск SystemUI -->
+    <string name="systemui_restart_title">Требуется перезапуск SystemUI</string>
+    <string name="systemui_restart_message">Для применения всех изменений требуется перезапуск SystemUI. Перезапустить SystemUI сейчас?</string>
+        
+    <!-- Перезагрузка системы -->
+    <string name="system_restart_title">Требуется перезагрузка системы</string>
+    <string name="system_restart_message">Для применения всех изменений требуется перезагрузка системы. Выполнить перезагрузку сейчас?</string>
+    
+    <!-- Интерфейс управления зарядкой -->
+    <string name="charging_control_notification_channel">Управление зарядкой</string>
+    <string name="charging_control_notification_title">Управление зарядкой</string>
+    <string name="charging_control_notification_cancel_once">Отмена</string>
+    <string name="charging_control_notification_content_limit">Зарядка ограничена до %1$d%%</string>
+    <string name="charging_control_notification_content_limit_reached">Достигнут лимит заряда %1$d%%</string>
+    <string name="charging_control_notification_content_target">Полная зарядка ожидается к %1$s</string>
+    <string name="charging_control_notification_content_target_reached">Аккумулятор заряжен</string>
+
+    <!-- Расширенные варианты перезагрузки -->
+    <string name="reboot_to_recovery_title">Recovery</string>
+    <string name="reboot_to_recovery_message">Перезагрузка в recovery</string>
+    <string name="reboot_to_bootloader_title">Bootloader</string>
+    <string name="reboot_to_bootloader_message">Перезагрузка в bootloader</string>
+    <string name="reboot_title">Перезагрузка</string>
+    <string name="reboot_message">Перезагрузка системы</string>
+
+    <!-- Блокировка жестов -->
+    <string name="gesture_locked_warning">Смахните снова для разблокировки жестов</string>
+
+    <!-- Цикл по режимам звука -->
+    <string name="volume_dialog_ringer_guidance_normal">Звонки и уведомления будут звучать</string>
+
+    <!-- Блокировка приложений -->
+    <string name="unlock_application">Разблокировать <xliff:g id="label" example="Telegram">%1$s</xliff:g></string>
+    
+    <!-- Режим сна -->
+    <string name="notification_channel_sleep">Режим сна</string>
+    <string name="sleep_mode_notification_title">Режим сна включен</string>
+    <string name="sleep_mode_notification_content">Нажмите для отключения режима сна</string>
+    <string name="sleep_mode_enabled_toast">Режим сна включен</string>
+    <string name="sleep_mode_disabled_toast">Режим сна отключен</string>
+
+    <!-- Перезапуск настроек -->
+    <string name="settings_restart_title">Требуется перезапуск приложения Настройки</string>
+    <string name="settings_restart_message">Для применения всех изменений требуется перезапуск приложения Настройки. Перезапустить сейчас?</string>
+</resources>
