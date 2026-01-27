@@ -1,0 +1,442 @@
+package com.android.systemui.shade.ui.viewmodel
+
+import android.content.Intent
+import android.provider.AlarmClock
+import android.provider.Settings
+import android.telephony.SubscriptionManager.PROFILE_CLASS_UNSET
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.filters.SmallTest
+import com.android.compose.animation.scene.ObservableTransitionState
+import com.android.compose.animation.scene.OverlayKey
+import com.android.compose.animation.scene.SceneKey
+import com.android.systemui.SysuiTestCase
+import com.android.systemui.coroutines.collectLastValue
+import com.android.systemui.deviceentry.domain.interactor.deviceEntryInteractor
+import com.android.systemui.flags.EnableSceneContainer
+import com.android.systemui.keyguard.data.repository.fakeDeviceEntryFingerprintAuthRepository
+import com.android.systemui.keyguard.shared.model.SuccessFingerprintAuthenticationStatus
+import com.android.systemui.kosmos.runTest
+import com.android.systemui.kosmos.testScope
+import com.android.systemui.kosmos.useUnconfinedTestDispatcher
+import com.android.systemui.lifecycle.activateIn
+import com.android.systemui.plugins.activityStarter
+import com.android.systemui.privacy.PrivacyApplication
+import com.android.systemui.privacy.PrivacyItem
+import com.android.systemui.privacy.PrivacyType
+import com.android.systemui.res.R
+import com.android.systemui.scene.domain.interactor.sceneInteractor
+import com.android.systemui.scene.shared.model.Overlays
+import com.android.systemui.scene.shared.model.Scenes
+import com.android.systemui.shade.data.repository.fakePrivacyChipRepository
+import com.android.systemui.shade.domain.interactor.disableDualShade
+import com.android.systemui.shade.domain.interactor.enableDualShade
+import com.android.systemui.shade.domain.interactor.shadeMode
+import com.android.systemui.shade.shared.model.ShadeMode
+import com.android.systemui.statusbar.pipeline.mobile.data.model.SubscriptionModel
+import com.android.systemui.statusbar.pipeline.mobile.domain.interactor.fakeMobileIconsInteractor
+import com.android.systemui.testKosmos
+import com.android.systemui.util.mockito.argThat
+import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.runTest
+import org.junit.Before
+import org.junit.Test
+import org.junit.runner.RunWith
+import org.mockito.ArgumentMatcher
+import org.mockito.ArgumentMatchers.anyInt
+import org.mockito.Mockito.verify
+import org.mockito.MockitoAnnotations
+
+@SmallTest
+@RunWith(AndroidJUnit4::class)
+@EnableSceneContainer
+class ShadeHeaderViewModelTest : SysuiTestCase() {
+    private val kosmos = testKosmos().useUnconfinedTestDispatcher()
+    private val testScope = kosmos.testScope
+    private val mobileIconsInteractor by lazy { kosmos.fakeMobileIconsInteractor }
+    private val sceneInteractor by lazy { kosmos.sceneInteractor }
+    private val deviceEntryInteractor by lazy { kosmos.deviceEntryInteractor }
+    private val underTest by lazy { kosmos.shadeHeaderViewModel }
+
+    @Before
+    fun setUp() {
+        MockitoAnnotations.initMocks(this)
+        underTest.activateIn(testScope)
+    }
+
+    @Test
+    fun mobileSubIds_update() =
+        testScope.runTest {
+            mobileIconsInteractor.filteredSubscriptions.value = listOf(SUB_1)
+
+            assertThat(underTest.mobileSubIds).isEqualTo(listOf(1))
+
+            mobileIconsInteractor.filteredSubscriptions.value = listOf(SUB_1, SUB_2)
+
+            assertThat(underTest.mobileSubIds).isEqualTo(listOf(1, 2))
+        }
+
+    @Test
+    fun onClockClicked_enableDesktopFeatureSetFalse_launchesClock() =
+        testScope.runTest {
+            overrideResource(R.bool.config_enableDesktopFeatureSet, false)
+            val activityStarter = kosmos.activityStarter
+
+            underTest.onClockClicked()
+
+            verify(activityStarter)
+                .postStartActivityDismissingKeyguard(
+                    argThat(IntentMatcherAction(AlarmClock.ACTION_SHOW_ALARMS)),
+                    anyInt(),
+                )
+        }
+
+    @Test
+    fun onClockClicked_enableDesktopFeatureSetTrueAndSingleShade_launchesClock() =
+        testScope.runTest {
+            overrideResource(R.bool.config_enableDesktopFeatureSet, true)
+            val activityStarter = kosmos.activityStarter
+
+            underTest.onClockClicked()
+
+            verify(activityStarter)
+                .postStartActivityDismissingKeyguard(
+                    argThat(IntentMatcherAction(AlarmClock.ACTION_SHOW_ALARMS)),
+                    anyInt(),
+                )
+        }
+
+    @Test
+    fun onClockClicked_enableDesktopFeatureSetTrueAndDualShade_openNotifShade() =
+        testScope.runTest {
+            overrideResource(R.bool.config_enableDesktopFeatureSet, true)
+            setupDualShadeState(scene = Scenes.Gone)
+            val currentScene by collectLastValue(sceneInteractor.currentScene)
+            val currentOverlays by collectLastValue(sceneInteractor.currentOverlays)
+
+            underTest.onClockClicked()
+
+            assertThat(currentScene).isEqualTo(Scenes.Gone)
+            assertThat(currentOverlays).contains(Overlays.NotificationsShade)
+            assertThat(currentOverlays).doesNotContain(Overlays.QuickSettingsShade)
+        }
+
+    @Test
+    fun onClockClicked_enableDesktopFeatureSetTrueOnNotifShade_closesShade() =
+        testScope.runTest {
+            overrideResource(R.bool.config_enableDesktopFeatureSet, true)
+            setupDualShadeState(scene = Scenes.Gone, overlay = Overlays.NotificationsShade)
+            val currentScene by collectLastValue(sceneInteractor.currentScene)
+            val currentOverlays by collectLastValue(sceneInteractor.currentOverlays)
+
+            underTest.onClockClicked()
+
+            assertThat(currentScene).isEqualTo(Scenes.Gone)
+            assertThat(currentOverlays).isEmpty()
+        }
+
+    @Test
+    fun onClockClicked_enableDesktopFeatureSetTrueOnQSShade_openNotifShade() =
+        testScope.runTest {
+            overrideResource(R.bool.config_enableDesktopFeatureSet, true)
+            setupDualShadeState(scene = Scenes.Gone, overlay = Overlays.QuickSettingsShade)
+            val currentScene by collectLastValue(sceneInteractor.currentScene)
+            val currentOverlays by collectLastValue(sceneInteractor.currentOverlays)
+
+            underTest.onClockClicked()
+
+            assertThat(currentScene).isEqualTo(Scenes.Gone)
+            assertThat(currentOverlays).contains(Overlays.NotificationsShade)
+            assertThat(currentOverlays).doesNotContain(Overlays.QuickSettingsShade)
+        }
+
+    @Test
+    fun onShadeCarrierGroupClicked_launchesNetworkSettings() =
+        testScope.runTest {
+            val activityStarter = kosmos.activityStarter
+            underTest.onShadeCarrierGroupClicked()
+
+            verify(activityStarter)
+                .postStartActivityDismissingKeyguard(
+                    argThat(IntentMatcherAction(Settings.ACTION_WIRELESS_SETTINGS)),
+                    anyInt(),
+                )
+        }
+
+    @Test
+    fun onSystemIconChipClicked_locked_collapsesShadeToLockscreen() =
+        testScope.runTest {
+            kosmos.disableDualShade()
+            setDeviceEntered(false)
+            setScene(Scenes.Shade)
+
+            underTest.onSystemIconChipClicked()
+
+            assertThat(sceneInteractor.currentScene.value).isEqualTo(Scenes.Lockscreen)
+        }
+
+    @Test
+    fun onSystemIconChipClicked_lockedOnQsShade_collapsesShadeToLockscreen() =
+        testScope.runTest {
+            setupDualShadeState(scene = Scenes.Lockscreen, overlay = Overlays.QuickSettingsShade)
+            val currentScene by collectLastValue(sceneInteractor.currentScene)
+            val currentOverlays by collectLastValue(sceneInteractor.currentOverlays)
+
+            underTest.onSystemIconChipClicked()
+
+            assertThat(currentScene).isEqualTo(Scenes.Lockscreen)
+            assertThat(currentOverlays).isEmpty()
+        }
+
+    @Test
+    fun onSystemIconChipClicked_lockedOnNotifShade_expandsQsShade() =
+        testScope.runTest {
+            setupDualShadeState(scene = Scenes.Lockscreen, overlay = Overlays.NotificationsShade)
+            val currentScene by collectLastValue(sceneInteractor.currentScene)
+            val currentOverlays by collectLastValue(sceneInteractor.currentOverlays)
+
+            underTest.onSystemIconChipClicked()
+
+            assertThat(currentScene).isEqualTo(Scenes.Lockscreen)
+            assertThat(currentOverlays).contains(Overlays.QuickSettingsShade)
+            assertThat(currentOverlays).doesNotContain(Overlays.NotificationsShade)
+        }
+
+    @Test
+    fun onSystemIconChipClicked_unlocked_collapsesShadeToGone() =
+        testScope.runTest {
+            kosmos.disableDualShade()
+            setDeviceEntered(true)
+            setScene(Scenes.Shade)
+
+            underTest.onSystemIconChipClicked()
+
+            assertThat(sceneInteractor.currentScene.value).isEqualTo(Scenes.Gone)
+        }
+
+    @Test
+    fun onSystemIconChipClicked_unlockedOnQsShade_collapsesShadeToGone() =
+        testScope.runTest {
+            setupDualShadeState(scene = Scenes.Gone, overlay = Overlays.QuickSettingsShade)
+            val currentScene by collectLastValue(sceneInteractor.currentScene)
+            val currentOverlays by collectLastValue(sceneInteractor.currentOverlays)
+
+            underTest.onSystemIconChipClicked()
+
+            assertThat(currentScene).isEqualTo(Scenes.Gone)
+            assertThat(currentOverlays).isEmpty()
+        }
+
+    @Test
+    fun onSystemIconChipClicked_unlockedOnNotifShade_expandsQsShade() =
+        testScope.runTest {
+            setupDualShadeState(scene = Scenes.Gone, overlay = Overlays.NotificationsShade)
+            val currentScene by collectLastValue(sceneInteractor.currentScene)
+            val currentOverlays by collectLastValue(sceneInteractor.currentOverlays)
+
+            underTest.onSystemIconChipClicked()
+
+            assertThat(currentScene).isEqualTo(Scenes.Gone)
+            assertThat(currentOverlays).contains(Overlays.QuickSettingsShade)
+            assertThat(currentOverlays).doesNotContain(Overlays.NotificationsShade)
+        }
+
+    @Test
+    fun onNotificationIconChipClicked_lockedOnNotifShade_collapsesShadeToLockscreen_opensClock() =
+        testScope.runTest {
+            setupDualShadeState(scene = Scenes.Lockscreen, overlay = Overlays.NotificationsShade)
+            val activityStarter = kosmos.activityStarter
+            val currentScene by collectLastValue(sceneInteractor.currentScene)
+            val currentOverlays by collectLastValue(sceneInteractor.currentOverlays)
+
+            underTest.onNotificationIconChipClicked()
+
+            assertThat(currentScene).isEqualTo(Scenes.Lockscreen)
+            assertThat(currentOverlays).isEmpty()
+            verify(activityStarter)
+                .postStartActivityDismissingKeyguard(
+                    argThat(IntentMatcherAction(AlarmClock.ACTION_SHOW_ALARMS)),
+                    anyInt(),
+                )
+        }
+
+    @Test
+    fun onNotificationIconChipClicked_lockedOnQsShade_expandsNotifShade() =
+        testScope.runTest {
+            setupDualShadeState(scene = Scenes.Lockscreen, overlay = Overlays.QuickSettingsShade)
+            val currentScene by collectLastValue(sceneInteractor.currentScene)
+            val currentOverlays by collectLastValue(sceneInteractor.currentOverlays)
+
+            underTest.onNotificationIconChipClicked()
+
+            assertThat(currentScene).isEqualTo(Scenes.Lockscreen)
+            assertThat(currentOverlays).contains(Overlays.NotificationsShade)
+            assertThat(currentOverlays).doesNotContain(Overlays.QuickSettingsShade)
+        }
+
+    @Test
+    fun onNotificationIconChipClicked_unlockedOnNotifShade_collapsesShadeToGone_opensClock() =
+        testScope.runTest {
+            setupDualShadeState(scene = Scenes.Gone, overlay = Overlays.NotificationsShade)
+            val activityStarter = kosmos.activityStarter
+            val currentScene by collectLastValue(sceneInteractor.currentScene)
+            val currentOverlays by collectLastValue(sceneInteractor.currentOverlays)
+
+            underTest.onNotificationIconChipClicked()
+
+            assertThat(currentScene).isEqualTo(Scenes.Gone)
+            assertThat(currentOverlays).isEmpty()
+            verify(activityStarter)
+                .postStartActivityDismissingKeyguard(
+                    argThat(IntentMatcherAction(AlarmClock.ACTION_SHOW_ALARMS)),
+                    anyInt(),
+                )
+        }
+
+    @Test
+    fun onNotificationIconChipClicked_unlockedOnQsShade_expandsNotifShade() =
+        testScope.runTest {
+            setupDualShadeState(scene = Scenes.Gone, overlay = Overlays.QuickSettingsShade)
+            val currentScene by collectLastValue(sceneInteractor.currentScene)
+            val currentOverlays by collectLastValue(sceneInteractor.currentOverlays)
+
+            underTest.onNotificationIconChipClicked()
+
+            assertThat(currentScene).isEqualTo(Scenes.Gone)
+            assertThat(currentOverlays).contains(Overlays.NotificationsShade)
+            assertThat(currentOverlays).doesNotContain(Overlays.QuickSettingsShade)
+        }
+
+    @Test
+    fun isPrivacyChipVisible_updates() =
+        kosmos.runTest {
+            fakePrivacyChipRepository.setPrivacyItems(emptyList())
+
+            assertThat(underTest.isPrivacyChipVisible).isFalse()
+
+            fakePrivacyChipRepository.setPrivacyItems(
+                listOf(
+                    PrivacyItem(
+                        privacyType = PrivacyType.TYPE_CAMERA,
+                        application = PrivacyApplication("", 0),
+                    )
+                )
+            )
+
+            assertThat(underTest.isPrivacyChipVisible).isTrue()
+        }
+
+    @Test
+    fun isPrivacyChipEnabled_noIndicationEnabled() =
+        kosmos.runTest {
+            fakePrivacyChipRepository.setIsMicCameraIndicationEnabled(false)
+            fakePrivacyChipRepository.setIsLocationIndicationEnabled(false)
+
+            assertThat(underTest.isPrivacyChipEnabled).isFalse()
+        }
+
+    @Test
+    fun isPrivacyChipEnabled_micCameraIndicationEnabled() =
+        kosmos.runTest {
+            fakePrivacyChipRepository.setIsMicCameraIndicationEnabled(true)
+            fakePrivacyChipRepository.setIsLocationIndicationEnabled(false)
+
+            assertThat(underTest.isPrivacyChipEnabled).isTrue()
+        }
+
+    @Test
+    fun isPrivacyChipEnabled_locationIndicationEnabled() =
+        kosmos.runTest {
+            fakePrivacyChipRepository.setIsMicCameraIndicationEnabled(false)
+            fakePrivacyChipRepository.setIsLocationIndicationEnabled(true)
+
+            assertThat(underTest.isPrivacyChipEnabled).isTrue()
+        }
+
+    @Test
+    fun isPrivacyChipEnabled_allIndicationEnabled() =
+        kosmos.runTest {
+            fakePrivacyChipRepository.setIsMicCameraIndicationEnabled(true)
+            fakePrivacyChipRepository.setIsLocationIndicationEnabled(true)
+
+            assertThat(underTest.isPrivacyChipEnabled).isTrue()
+        }
+
+    companion object {
+        private val SUB_1 =
+            SubscriptionModel(
+                subscriptionId = 1,
+                isOpportunistic = false,
+                carrierName = "Carrier 1",
+                profileClass = PROFILE_CLASS_UNSET,
+            )
+        private val SUB_2 =
+            SubscriptionModel(
+                subscriptionId = 2,
+                isOpportunistic = false,
+                carrierName = "Carrier 2",
+                profileClass = PROFILE_CLASS_UNSET,
+            )
+    }
+
+    private fun TestScope.setupDualShadeState(scene: SceneKey, overlay: OverlayKey? = null) {
+        kosmos.enableDualShade()
+        val shadeMode by collectLastValue(kosmos.shadeMode)
+        val currentScene by collectLastValue(sceneInteractor.currentScene)
+        val currentOverlays by collectLastValue(sceneInteractor.currentOverlays)
+        if (scene == Scenes.Gone) {
+            // Unlock the device, marking the device has been entered.
+            kosmos.fakeDeviceEntryFingerprintAuthRepository.setAuthenticationStatus(
+                SuccessFingerprintAuthenticationStatus(0, true)
+            )
+        }
+        assertThat(shadeMode).isEqualTo(ShadeMode.Dual)
+
+        sceneInteractor.changeScene(scene, "test")
+        checkNotNull(currentOverlays).forEach { sceneInteractor.instantlyHideOverlay(it, "test") }
+        overlay?.let { sceneInteractor.showOverlay(it, "test") }
+        sceneInteractor.setTransitionState(
+            MutableStateFlow<ObservableTransitionState>(
+                ObservableTransitionState.Idle(scene, setOfNotNull(overlay))
+            )
+        )
+
+        assertThat(currentScene).isEqualTo(scene)
+        if (overlay == null) {
+            assertThat(currentOverlays).isEmpty()
+        } else {
+            assertThat(currentOverlays).containsExactly(overlay)
+        }
+    }
+
+    private fun setScene(key: SceneKey) {
+        sceneInteractor.changeScene(key, "test")
+        sceneInteractor.setTransitionState(
+            MutableStateFlow<ObservableTransitionState>(ObservableTransitionState.Idle(key))
+        )
+    }
+
+    private fun setDeviceEntered(isEntered: Boolean) {
+        if (isEntered) {
+            // Unlock the device marking the device has entered.
+            kosmos.fakeDeviceEntryFingerprintAuthRepository.setAuthenticationStatus(
+                SuccessFingerprintAuthenticationStatus(0, true)
+            )
+        }
+        setScene(
+            if (isEntered) {
+                Scenes.Gone
+            } else {
+                Scenes.Lockscreen
+            }
+        )
+        assertThat(deviceEntryInteractor.isDeviceEntered.value).isEqualTo(isEntered)
+    }
+}
+
+private class IntentMatcherAction(private val action: String) : ArgumentMatcher<Intent> {
+    override fun matches(argument: Intent?): Boolean {
+        return argument?.action == action
+    }
+}

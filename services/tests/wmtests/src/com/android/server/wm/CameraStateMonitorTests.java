@@ -1,0 +1,281 @@
+/*
+ * Copyright (C) 2022 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.android.server.wm;
+
+import static com.android.dx.mockito.inline.extended.ExtendedMockito.doAnswer;
+import static com.android.dx.mockito.inline.extended.ExtendedMockito.doReturn;
+import static com.android.dx.mockito.inline.extended.ExtendedMockito.spyOn;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.mock;
+
+import android.app.IApplicationThread;
+import android.hardware.camera2.CameraManager;
+import android.os.Handler;
+import android.platform.test.annotations.Presubmit;
+
+import androidx.annotation.NonNull;
+import androidx.test.filters.SmallTest;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import java.util.concurrent.Executor;
+import java.util.function.Consumer;
+
+/**
+ * Tests for {@link CameraStateMonitor}.
+ *
+ * <p>Build/Install/Run:
+ *  atest WmTests:CameraStateMonitorTests
+ */
+@SmallTest
+@Presubmit
+@RunWith(WindowTestRunner.class)
+public final class CameraStateMonitorTests extends WindowTestsBase {
+
+    private static final String TEST_PACKAGE_1 = "com.android.frameworks.wmtests";
+    private static final String CAMERA_ID_1 = "camera-1";
+    private static final String CAMERA_ID_2 = "camera-2";
+
+    @Test
+    public void testOnCameraOpened_policyAdded_notifiesCameraOpened() {
+        runTestScenario((robot) -> {
+            robot.addListenerThatCanClose();
+            robot.onCameraOpened(CAMERA_ID_1, TEST_PACKAGE_1);
+
+            robot.checkCameraOpenedCalledForCanClosePolicy(1);
+        });
+    }
+
+    @Test
+    public void testOnCameraOpened_policyAdded_cameraRegistersAsOpenedDuringTheCallback() {
+        runTestScenario((robot) -> {
+            robot.addListenerThatCanClose();
+            robot.onCameraOpened(CAMERA_ID_1, TEST_PACKAGE_1);
+
+            robot.checkCameraRegisteresAsOpenedForCanClosePolicy(true);
+        });
+    }
+
+    @Test
+    public void testOnCameraOpened_cameraClosed_notifyCameraClosed() {
+        runTestScenario((robot) -> {
+            robot.addListenerThatCanClose();
+            robot.onCameraOpened(CAMERA_ID_1, TEST_PACKAGE_1);
+
+            robot.onCameraClosed(CAMERA_ID_1);
+
+            robot.checkCanCloseCalledForCanClosePolicy(1);
+            robot.checkCameraClosedCalledForCanClosePolicy(1);
+        });
+    }
+
+    @Test
+    public void testOnCameraOpenedAndClosed_cameraRegistersAsClosedDuringTheCallback() {
+        runTestScenario((robot) -> {
+            robot.addListenerThatCanClose();
+            robot.onCameraOpened(CAMERA_ID_1, TEST_PACKAGE_1);
+
+            robot.onCameraClosed(CAMERA_ID_1);
+
+            robot.checkCameraRegisteresAsOpenedForCanClosePolicy(false);
+        });
+    }
+
+    @Test
+    public void testOnCameraOpened_policyCannotCloseYet_notifyCameraClosedAgain() {
+        runTestScenario((robot) -> {
+            robot.addListenerThatCannotCloseOnce();
+            robot.onCameraOpened(CAMERA_ID_1, TEST_PACKAGE_1);
+
+            robot.onCameraClosed(CAMERA_ID_1);
+
+            robot.checkCanCloseCalledForCannotCloseOncePolicy(2);
+            robot.checkCameraClosedCalledForCannotCloseOncePolicy(1);
+        });
+    }
+
+    @Test
+    public void testReconnectedToDifferentCamera_notifiesPolicy() {
+        runTestScenario((robot) -> {
+            robot.addListenerThatCanClose();
+            robot.onCameraOpened(CAMERA_ID_1, TEST_PACKAGE_1);
+            robot.onCameraClosed(CAMERA_ID_1);
+            robot.onCameraOpened(CAMERA_ID_2, TEST_PACKAGE_1);
+
+            robot.checkCameraOpenedCalledForCanClosePolicy(2);
+        });
+    }
+
+    /**
+     * Runs a test scenario providing a Robot.
+     */
+    void runTestScenario(@NonNull Consumer<CameraStateMonitorRobotTests> consumer) {
+        final CameraStateMonitorRobotTests robot =
+                new CameraStateMonitorRobotTests(mWm, mAtm, mSupervisor, this);
+        consumer.accept(robot);
+    }
+
+    private static class CameraStateMonitorRobotTests extends AppCompatRobotBase {
+        private final WindowTestsBase mWindowTestsBase;
+
+        // Simulates a listener which will react to the change on a particular activity - for
+        // example put the activity in a camera compat mode.
+        private FakeCameraCompatStateListener mFakeListenerCanClose;
+        // Simulates a listener which for some reason cannot process `onCameraClosed` event once it
+        // first arrives - this means that the update needs to be postponed.
+        private FakeCameraCompatStateListener mFakeListenerCannotCloseOnce;
+
+        private CameraManager.AvailabilityCallback mCameraAvailabilityCallback;
+
+        CameraStateMonitorRobotTests(@NonNull WindowManagerService wm,
+                @NonNull ActivityTaskManagerService atm,
+                @NonNull ActivityTaskSupervisor supervisor,
+                @NonNull WindowTestsBase windowTestsBase) {
+            super(wm, atm, supervisor);
+            mWindowTestsBase = windowTestsBase;
+            setupCameraManager();
+            setupAppCompatConfiguration();
+
+            configureActivityAndDisplay();
+        }
+
+        @Override
+        void onPostDisplayContentCreation(@NonNull DisplayContent displayContent) {
+            super.onPostDisplayContentCreation(displayContent);
+            spyOn(displayContent.mAppCompatCameraPolicy);
+            if (displayContent.mAppCompatCameraPolicy.mCameraCompatFreeformPolicy != null) {
+                spyOn(displayContent.mAppCompatCameraPolicy.mCameraCompatFreeformPolicy);
+            }
+
+            mFakeListenerCannotCloseOnce = new FakeCameraCompatStateListener(true);
+            mFakeListenerCanClose = new FakeCameraCompatStateListener(false);
+        }
+
+        @Override
+        void onPostActivityCreation(@NonNull ActivityRecord activity) {
+            super.onPostActivityCreation(activity);
+            setupCameraManager();
+            setupHandler();
+            setupMockApplicationThread();
+        }
+
+        private void setupMockApplicationThread() {
+            IApplicationThread mockApplicationThread = mock(IApplicationThread.class);
+            spyOn(activity().top().app);
+            doReturn(mockApplicationThread).when(activity().top().app).getThread();
+        }
+
+        private void setupAppCompatConfiguration() {
+            applyOnConf((c) -> {
+                c.enableCameraCompatTreatment(true);
+                c.enableCameraCompatTreatmentAtBuildTime(true);
+                c.enableCameraCompatRefresh(true);
+                c.enableCameraCompatRefreshCycleThroughStop(true);
+                c.enableCameraCompatSplitScreenAspectRatio(false);
+            });
+        }
+
+        private void setupCameraManager() {
+            final CameraManager mockCameraManager = mock(CameraManager.class);
+            doAnswer(invocation -> {
+                mCameraAvailabilityCallback = invocation.getArgument(1);
+                return null;
+            }).when(mockCameraManager).registerAvailabilityCallback(
+                    any(Executor.class), any(CameraManager.AvailabilityCallback.class));
+
+            doReturn(mockCameraManager).when(mWindowTestsBase.mWm.mContext).getSystemService(
+                    CameraManager.class);
+        }
+
+        private void setupHandler() {
+            final Handler handler = activity().top().mWmService.mH;
+            spyOn(handler);
+
+            doAnswer(invocation -> {
+                ((Runnable) invocation.getArgument(0)).run();
+                return null;
+            }).when(handler).postDelayed(any(Runnable.class), anyLong());
+        }
+
+        private void configureActivityAndDisplay() {
+            applyOnActivity(a -> {
+                a.createActivityWithComponentInNewTaskAndDisplay();
+                a.setIgnoreOrientationRequest(true);
+                spyOn(a.top().mAppCompatController.getCameraOverrides());
+                spyOn(a.top().info);
+                doReturn(a.displayContent().getDisplayInfo()).when(
+                        a.displayContent().mWmService.mDisplayManagerInternal).getDisplayInfo(
+                        a.displayContent().mDisplayId);
+            });
+        }
+
+        private void addListenerThatCanClose() {
+            getCameraStateMonitor().addCameraStateListener(mFakeListenerCanClose);
+        }
+
+        private void addListenerThatCannotCloseOnce() {
+            getCameraStateMonitor().addCameraStateListener(mFakeListenerCannotCloseOnce);
+        }
+
+        private void onCameraOpened(@NonNull String cameraId, @NonNull String packageName) {
+            mCameraAvailabilityCallback.onCameraOpened(cameraId, packageName);
+            waitHandlerIdle();
+        }
+
+        private void onCameraClosed(@NonNull String cameraId) {
+            mCameraAvailabilityCallback.onCameraClosed(cameraId);
+        }
+
+        private void checkCameraRegisteresAsOpenedForCanClosePolicy(boolean expectedIsOpened) {
+            assertEquals(expectedIsOpened, activity().top().getDisplayContent()
+                    .mAppCompatCameraPolicy.mCameraStateMonitor.isCameraRunningForActivity(
+                            activity().top()));
+        }
+
+        private void checkCameraOpenedCalledForCanClosePolicy(int times) {
+            assertEquals(times, mFakeListenerCanClose.mOnCameraOpenedCounter);
+        }
+
+        private void checkCanCloseCalledForCanClosePolicy(int times) {
+            assertEquals(times, mFakeListenerCanClose.mCheckCanCloseCounter);
+        }
+
+        private void checkCanCloseCalledForCannotCloseOncePolicy(int times) {
+            assertEquals(times, mFakeListenerCannotCloseOnce.mCheckCanCloseCounter);
+        }
+
+        private void checkCameraClosedCalledForCanClosePolicy(int times) {
+            assertEquals(times, mFakeListenerCanClose.mOnCameraClosedCounter);
+        }
+
+        private void checkCameraClosedCalledForCannotCloseOncePolicy(int times) {
+            assertEquals(times, mFakeListenerCannotCloseOnce.mOnCameraClosedCounter);
+        }
+
+        private void waitHandlerIdle() {
+            mWindowTestsBase.waitHandlerIdle(activity().displayContent().mWmService.mH);
+        }
+
+        private CameraStateMonitor getCameraStateMonitor() {
+            return activity().top().mDisplayContent.mAppCompatCameraPolicy.mCameraStateMonitor;
+        }
+    }
+}

@@ -1,0 +1,68 @@
+# Ravenwood "policy" file for framework-minus-apex.
+
+# The "no-pta" marker is used to exclude the lines from "ravenhelper pta",
+# which tries to convert policies to annotations.
+
+# To avoid VerifyError on nano proto files (b/324063814), we rename nano proto classes.
+# Note: The "rename" directive must use slashes (/) as a package name separator.
+rename com/.*/nano/   devicenano/
+rename android/.*/nano/   devicenano/
+
+# StatsD auto-generated
+class com.android.internal.util.FrameworkStatsLog keepclass  # no-pta
+
+# Included in module-utils; cannot use annotations
+class com.android.internal.util.FastXmlSerializer keepclass  # no-pta
+
+# From modules-utils; cannot use annotations
+class com.android.internal.util.Preconditions keepclass  # no-pta
+class com.android.internal.logging.InstanceId keepclass  # no-pta
+class com.android.internal.logging.InstanceIdSequence keepclass  # no-pta
+class com.android.internal.logging.UiEvent keepclass  # no-pta
+class com.android.internal.logging.UiEventLogger keepclass  # no-pta
+
+# From modules-utils; cannot use annotations
+class com.android.modules.utils.BinaryXmlPullParser keepclass  # no-pta
+class com.android.modules.utils.BinaryXmlSerializer keepclass  # no-pta
+class com.android.modules.utils.FastDataInput keepclass  # no-pta
+class com.android.modules.utils.FastDataOutput keepclass  # no-pta
+class com.android.modules.utils.ModifiedUtf8 keepclass  # no-pta
+class com.android.modules.utils.TypedXmlPullParser keepclass  # no-pta
+class com.android.modules.utils.TypedXmlSerializer keepclass  # no-pta
+
+# Uri
+class android.net.Uri keepclass  # no-pta
+class android.net.UriCodec keepclass  # no-pta
+
+# Telephony
+class android.telephony.PinResult keepclass  # no-pta
+
+# Just enough to support mocking, no further functionality
+class android.content.BroadcastReceiver allow-annotation
+    method <init> ()V allow-annotation
+class android.content.Context  # no-pta
+    method <init> ()V keep
+class android.text.ClipboardManager keep  # no-pta
+    method <init> ()V keep
+
+# Just enough to allow ResourcesManager to run
+class android.hardware.display.DisplayManagerGlobal allow-annotation
+    method getInstance ()Landroid/hardware/display/DisplayManagerGlobal; allow-annotation
+
+# Bare minimum to support running ImageDecoderTest
+class android.graphics.drawable.BitmapDrawable allow-annotation
+    method <init> (Landroid/content/res/Resources;Landroid/graphics/Bitmap;)V allow-annotation
+    method init * allow-annotation
+    method updateLocalState * allow-annotation
+    method computeBitmapSize * allow-annotation
+    method getIntrinsicWidth * allow-annotation
+    method getIntrinsicHeight * allow-annotation
+    method getBitmap * allow-annotation
+class android.graphics.drawable.Drawable allow-annotation
+    method <init> ()V keep  # no-pta
+    method resolveDensity * allow-annotation
+    method updateBlendModeFilter * allow-annotation
+
+class android.app.ActivityThread allow-annotation
+    method currentSystemContext allow-annotation
+    method currentApplication allow-annotation

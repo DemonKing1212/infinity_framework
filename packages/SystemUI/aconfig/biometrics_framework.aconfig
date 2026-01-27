@@ -1,0 +1,29 @@
+package: "com.android.systemui"
+container: "system"
+
+# NOTE: Keep alphabetized to help limit merge conflicts from multiple simultaneous editors.
+
+flag {
+    name: "bp_colors"
+    namespace: "biometrics_framework"
+    description: "Updates colors in biometric prompt"
+    bug: "389744739"
+}
+
+flag {
+    name: "cont_auth_plugin"
+    namespace: "biometrics_framework"
+    description: "Plugin and related API hooks for contextual auth plugins"
+    bug: "373600589"
+}
+
+flag {
+    name: "udfps_screen_off_unlock_flicker"
+    namespace: "biometrics_framework"
+    description: "Controls the fix of flicker of udfps screen-off unlock"
+    bug: "384986206"
+    metadata {
+        purpose: PURPOSE_BUGFIX
+    }
+}
+

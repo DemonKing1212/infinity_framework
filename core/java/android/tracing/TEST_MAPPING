@@ -1,0 +1,13 @@
+{
+  "presubmit": [
+    {
+      "name": "TracingTests"
+    }
+  ],
+  "wm-cf": [
+    {
+      "name": "TracingTests"
+    }
+  ]
+
+}

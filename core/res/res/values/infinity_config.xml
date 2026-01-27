@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+-->
+<resources>
+
+    <!-- Name of a font family to use as light font. For theming purpose. -->
+    <string name="config_lightFontFamily" translatable="false">sans-serif-light</string>
+
+    <!-- Name of a font family to use as regular font. For theming purpose. -->
+    <string name="config_regularFontFamily" translatable="false">sans-serif-regular</string>
+
+    <!-- Whether device has dash charging support -->
+    <bool name="config_hasDashCharger">false</bool>
+
+    <!-- Whether device has warp charging support -->
+    <bool name="config_hasWarpCharger">false</bool>
+
+    <!-- Whether device has VOOC charging support -->
+    <bool name="config_hasVoocCharger">false</bool>
+
+    <!-- Whether device has turbo power charging support -->
+    <bool name="config_hasTurboPowerCharger">false</bool>
+
+    <!-- Path to fast charging status file to detect whether an oem fast charger is active -->
+    <string name="config_oemFastChargerStatusPath" translatable="false"></string>
+
+    <!-- Path to fast charging status file to detect whether an oem fast charger is active -->
+    <string name="config_oemFastChargerStatusPath2" translatable="false"></string>
+
+    <!-- Expected value from fast charging status file  -->
+    <string name="config_oemFastChargerStatusValue" translatable="false">1</string>
+
+    <!-- Any package that has one of the package names defined below will be prevented
+       from using specific sensors in order to stop battery drain -->
+    <string-array name="config_blockPackagesSensorDrain">
+        <item>com.whatsapp</item>
+        <item>com.gbwhatsapp</item>
+        <item>com.yowhatsapp</item>
+        <item>com.whatsapp.plus</item>
+        <item>org.telegram.messenger</item>
+        <item>org.telegram.messenger.plus</item>
+        <item>com.netease.cloudmusic</item>
+        <item>fm.xiami.main</item>
+        <item>com.netease.snailread</item>
+        <item>com.baidu.browser.apps</item>
+        <item>org.thunderdog.challegram</item>
+        <item>com.snapchat.android</item>
+        <item>com.facebook.orca</item>
+        <item>com.Slack</item>
+        <item>tugapower.codeaurora.browser</item>
+        <item>org.mozilla.firefox</item>
+        <item>com.android.chrome</item>
+        <item>com.amazon.mShop.android.shopping</item>
+        <item>com.google.android.inputmethod.latin</item>
+        <item>com.google.android.apps.plus</item>
+        <item>com.google.android.apps.maps</item>
+        <item>ru.ok.android</item>
+        <item>com.instagram.android.MainTabActivity</item>
+        <item>com.facebook.orca</item>
+        <item>com.facebook.orca.StartScreenActivity</item>
+        <item>com.spotify.music</item>
+        <item>com.spotify.music.MainActivity</item>
+        <item>com.android.vending</item>
+        <item>com.trtf.blue</item>
+        <item>com.truecaller</item>
+        <item>com.gaana</item>
+        <item>com.facebook.katana.LoginActivity</item>
+    </string-array>
+
+    <!-- Whether device has physical tri state switch -->
+    <bool name="config_hasAlertSlider">false</bool>
+
+    <!-- List of system apps that are allowed to be locked with app lock.
+         Use with extreme caution. -->
+    <string-array name="config_appLockAllowedSystemApps" translatable="false" />
+
+    <!-- Defines the sysfs attribute path used by pocket bridge
+         to communicate pocket state to the pocket judge kernel driver. -->
+    <string name="config_pocketBridgeSysfsInpocket"></string>
+
+    <!-- Pocket Lock -->
+    <bool name="config_pocketModeSupported">true</bool>
+    <bool name="config_pocketUseLightSensor">true</bool>
+
+    <!-- Defines custom OEM sensor for pocket detection. -->
+    <string name="config_pocketJudgeVendorSensorName"></string>
+    <item name="config_pocketJudgeVendorSensorValue" format="float" type="dimen">1.0</item>
+    <string name="config_pocketJudgeVendorProximitySensorName"></string>
+
+    <!-- Whether the device supports Smart Pixels -->
+    <bool name="config_supportSmartPixels">true</bool>
+
+    <!-- Define device configs on boot -->
+    <string-array name="global_device_configs_override" translatable="false">
+    </string-array>
+    <string-array name="device_configs_override" translatable="false">
+    </string-array>
+
+    <!-- Whether to cancel fingerprint operation if not idle -->
+    <bool name="config_fpCancelIfNotIdle">false</bool>
+
+    <java-symbol type="array" name="config_launcherComponents" />
+    <java-symbol type="array" name="config_launcherPackages" />
+
+    <!-- Whitelist of package names to bypass foreground service type validation -->
+    <java-symbol type="array" name="config_fgsTypeValidationBypassPackages"/>
+
+    <!-- Whitelist of package names to bypass alarm manager validation -->
+    <java-symbol type="array" name="config_alarmManagerValidationBypassPackages"/>
+
+    <!-- Whitelist of package names to bypass broadcast reciever validation -->
+    <java-symbol type="array" name="config_broadcaseReceiverValidationBypassPackages"/>
+
+    <!-- Keybox configuration for device certification -->
+    <string-array name="config_certifiedKeybox" translatable="false">
+        <item>EC.PRIV:MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgyVk42aTa8frNkY8OcQT1V4bzCmjnD+RZlcISkuDUNaGhRANCAARJ4ihOsrwyV7G+xS8BBaUevTPZ0sdocWzlH9te3i9a+lCZtoG/o1iZTgyeB6YPcIC/pvzRZxg3ixC0wHSoPDO5</item>
+        <item>EC.CERT_1:MIIB8zCCAXmgAwIBAgIQF0ZWOmknHBsqItQzkSSyozAKBggqhkjOPQQDAjA5MQwwCgYDVQQMDANURUUxKTAnBgNVBAUTIGVhMDlhMjliYThmNmRkZjIxZjg5MmFiMGM0ZDZkZmQ3MB4XDTIwMTIyMTE4NDkzN1oXDTMwMTIxOTE4NDkzN1owOTEMMAoGA1UEDAwDVEVFMSkwJwYDVQQFEyAyMjQyYmEzY2RjZDRjZTI3NWJiOGViNDUyNmFmOGY2ZDBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABEniKE6yvDJXsb7FLwEFpR69M9nSx2hxbOUf217eL1r6UJm2gb+jWJlODJ4Hpg9wgL+m/NFnGDeLELTAdKg8M7mjYzBhMB0GA1UdDgQWBBScv09U8xNdK/i5RspF8/LV74ABGzAfBgNVHSMEGDAWgBRGcco8Oh16C6q61i8L6oW6nh8rKDAPBgNVHRMBAf8EBTADAQH/MA4GA1UdDwEB/wQEAwICBDAKBggqhkjOPQQDAgNoADBlAjEA7czfbHu1qocdl34q9JsudZ1o3g6obHWd8GmLBvlnLd+QzpiXpYZ8XytrH0NgaWWnAjBS28a/WDvEnMVra2eAyyOYdmQijwI+WbGk1Wo8SX8XEGt7yomBRR4OwpF22mGMsO4=</item>
+        <item>EC.CERT_2:MIIDlDCCAXygAwIBAgIRAObg1Xdhx5gO5OzHJ2uXICowDQYJKoZIhvcNAQELBQAwGzEZMBcGA1UEBRMQZjkyMDA5ZTg1M2I2YjA0NTAeFw0yMDEyMjExODQ2NDBaFw0zMDEyMTkxODQ2NDBaMDkxDDAKBgNVBAwMA1RFRTEpMCcGA1UEBRMgZWEwOWEyOWJhOGY2ZGRmMjFmODkyYWIwYzRkNmRmZDcwdjAQBgcqhkjOPQIBBgUrgQQAIgNiAARi/vzoiQsHui3WqbKyvmVWs3QTdPWM4z2q4jbQZliy+sU4WDK4U5FFS/lMXMfG4YClTd6+qlrxLgd5G8l6fCLYOhvDUeSzSI0NQawDjcOnwalqp6qo0VIBMNjUCWtaVA+jYzBhMB0GA1UdDgQWBBRGcco8Oh16C6q61i8L6oW6nh8rKDAfBgNVHSMEGDAWgBQ2YeEAfIgFCVGLRGxH/xpMyepPEjAPBgNVHRMBAf8EBTADAQH/MA4GA1UdDwEB/wQEAwICBDANBgkqhkiG9w0BAQsFAAOCAgEAR8f9KYHWPVsFbHlt4BRahea4tiSqEqykLvbpQwMM/mRDa91smqbIORA8P0BRTwzhueEKPt9mDk1QBS2sk50niTSNjpCpN4FfQPyPf3W3L0M8iBc1OEYXWc3Su62kDlHl1D7B13DCnrOX3mRFHsznWrJhDI7qJDWv8ZdlMvfYUJiEKqT+vNrgONvrxWCQM5fPiBIJN51kGZjtYJprszk08+LpOIun5kgS4K3NDWbIHjuonJsJDbQlJf2y40pq/MmZOi6yk1iOXasKR7j0zmCfgN0QBFvalq5UEVPCvPJe+/Xx0OWoDhryqLO1nk2ZrZkbHAa1MBTTIJ4tSBVIbQvDrWBbdpO//pFIQg9dTBPzUlGwSG2uIohjLXt9gdQ6RskquyVi90ZcrCq6Q9zpvt92Kdovq+xhE7SrwfX5ZnYgSwUI2SgMXvz+6FIrD/WB9NELmrU8/cDPUHiXfotMvHNUAUDQGpSA9dQh/XRl5MgmWXp4tvKVWTrFxfyw9fnzlMrvEciamSjdfy0QFIQdqYPF2dOyjGpXjNzLteU//XwuWF5lG6JAMjt3HXGap9M5J8sfKxQqVNmg0zrn/19xbHdfdxu21qCDXo/jnT1pGbK4B/WOwUIBK5JfPzYp1A670gUlW92jyTPm6HpDFX4vecusTFnXjLd1QocpDUFD0tUNV74=</item>
+        <item>EC.CERT_3:MIIFHDCCAwSgAwIBAgIJANUP8luj8tazMA0GCSqGSIb3DQEBCwUAMBsxGTAXBgNVBAUTEGY5MjAwOWU4NTNiNmIwNDUwHhcNMTkxMTIyMjAzNzU4WhcNMzQxMTE4MjAzNzU4WjAbMRkwFwYDVQQFExBmOTIwMDllODUzYjZiMDQ1MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAr7bHgiuxpwHsK7Qui8xUFmOr75gvMsd/dTEDDJdSSxtf6An7xyqpRR90PL2abxM1dEqlXnf2tqw1Ne4Xwl5jlRfdnJLmN0pTy/4lj4/7tv0Sk3iiKkypnEUtR6WfMgH0QZfKHM1+di+y9TFRtv6y//0rb+T+W8a9nsNL/ggjnar86461qO0rOs2cXjp3kOG1FEJ5MVmFmBGtnrKpa73XpXyTqRxB/M0n1n/W9nGqC4FSYa04T6N5RIZGBN2z2MT5IKGbFlbC8UrW0DxW7AYImQQcHtGl/m00QLVWutHQoVJYnFPlXTcHYvASLu+RhhsbDmxMgJJ0mcDpvsC4PjvB+TxywElgS70vE0XmLD+OJtvsBslHZvPBKCOdT0MS+tgSOIfga+z1Z1g7+DVagf7quvmag8jfPioyKvxnK/EgsTUVi2ghzq8wm27ud/mIM7AY2qEORR8Go3TVB4HzWQgpZrt3i5MIlCaY504LzSRiigHCzAPlHws+W0rB5N+er5/2pJKnfBSDiCiFAVtCLOZ7gLiMm0jhO2B6tUXHI/+MRPjy02i59lINMRRev56GKtcd9qO/0kUJWdZTdA2XoS82ixPvZtXQpUpuL12ab+9EaDK8Z4RHJYYfCT3Q5vNAXaiWQ+8PTWm2QgBR/bkwSWc+NpUFgNPN9PvQi8WEg5UmAGMCAwEAAaNjMGEwHQYDVR0OBBYEFDZh4QB8iAUJUYtEbEf/GkzJ6k8SMB8GA1UdIwQYMBaAFDZh4QB8iAUJUYtEbEf/GkzJ6k8SMA8GA1UdEwEB/wQFMAMBAf8wDgYDVR0PAQH/BAQDAgIEMA0GCSqGSIb3DQEBCwUAA4ICAQBOMaBc8oumXb2voc7XCWnuXKhBBK3e2KMGz39t7lA3XXRe2ZLLAkLM5y3J7tURkf5a1SutfdOyXAmeE6SRo83Uh6WszodmMkxK5GM4JGrnt4pBisu5igXEydaW7qq2CdC6DOGjG+mEkN8/TA6p3cnoL/sPyz6evdjLlSeJ8rFBH6xWyIZCbrcpYEJzXaUOEaxxXxgYz5/cTiVKN2M1G2okQBUIYSY6bjEL4aUN5cfo7ogP3UvliEo3Eo0YgwuzR2v0KR6C1cZqZJSTnghIC/vAD32KdNQ+c3N+vl2OTsUVMC1GiWkngNx1OO1+kXW+YTnnTUOtOIswUP/Vqd5SYgAImMAfY8U9/iIgkQj6T2W6FsScy94IN9fFhE1UtzmLoBIuUFsVXJMTz+Jucth+IqoWFua9v1R93/k98p41pjtFX+H8DslVgfP097vju4KDlqN64xV1grw3ZLl4CiOe/A91oeLm2UHOq6wn3esB4r2EIQKb6jTVGu5sYCcdWpXr0AUVqcABPdgL+H7qJguBw09ojm6xNIrw2OocrDKsudk/okr/AwqEyPKw9WnMlQgLIKw1rODG2NvU9oR3GVGdMkUBZutL8VuFkERQGt6vQ2OCw0sV47VMkuYbacK/xyZFiRcrPJPb41zgbQj9XAEyLKCHex0SdDrx+tWUDqG8At2JHA==</item>
+        <item>RSA.PRIV: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</item>
+        <item>RSA.CERT_1:MIIE3zCCAsegAwIBAgIQDI+tbAREN7ioLmllGvzPVjANBgkqhkiG9w0BAQsFADA5MQwwCgYDVQQMDANURUUxKTAnBgNVBAUTIGVhMDlhMjliYThmNmRkZjIxZjg5MmFiMGM0ZDZkZmQ3MB4XDTIwMTIyMTE4NDkzN1oXDTMwMTIxOTE4NDkzN1owOTEMMAoGA1UEDAwDVEVFMSkwJwYDVQQFEyAyMjQyYmEzY2RjZDRjZTI3NWJiOGViNDUyNmFmOGY2ZDCCAaIwDQYJKoZIhvcNAQEBBQADggGPADCCAYoCggGBAMl743UQ4SNCKOkvWEY8d8JGUOFNTzT9lkuuLupM8mhAS9zbM/vMLmAqIQ44hpLmMM2PTWBTVsnQ7LYJHkw1gc/b+zjc+QbGBQiNHuCAF/tJ7966pK67DJ4bqmyvnsTaXkqa0Uls8ZKc8VAN2EyUhxMqIfkbb6Wmgm8blc6CX/fscdJdVQNGYwF+WpuN1w8APTA8iXYGBqtsPGvatfEE4rwBTYmtP0RzuRPabnEQ0punlbs8BDDxFicja7rFTenwKJyBy8atAG6rAJI47OkAmHgFE5Jbkq2amwQQe2JS945CT7pdAw1PjBJI6GY49PwV4UJA6/x8mlK3gWEOpa9HtCvW2KHEmZ4r2Ef4yPfa9zAkmB6Gn/tR15wPIwiI2FyRkgw55WBLPtSa3YmfIRrjeZ5Qr9t2k8R9k5s6aw2Y2/iBNGiZCZjeqldJ5HGdevgHjDvjsatS1iK9YCPK9GaXOA06eRpPSIXs1CLj5RUhXq6ypCP3agq0f4hP8UZqJ2qYUQIDAQABo2MwYTAdBgNVHQ4EFgQUKhG+iyfoiXO6ZBmOwzM81ZDRtwowHwYDVR0jBBgwFoAUjzDUR8MrgkcMHfA2+iD8quczoxQwDwYDVR0TAQH/BAUwAwEB/zAOBgNVHQ8BAf8EBAMCAgQwDQYJKoZIhvcNAQELBQADggIBABJisY5SzWMal1mOETZ4GUpS4VkRjtUSoBo6pv616pT0HuQPUu2BLRWprj1UIAzlrd9YyCv0p85lPrqmmMW0MgaDFWbreDv67j5iFuABD9qLOxHxnk0osQoAlHWc6FahZ+1X8AHpR3eeCKHX+Zn09HvKWxGoTKEoALSuGrpgpBiII8o6C26O3+OVPl86xCEItxNr3xT+VO+ECXFiaFoNzD/XrSIdmG92DFeca0Gznt0uig9RhQJ5SaZ+yRkIXBLx7QG9dSjQLBGSdp9kpBZFSkJBvpRxfSoFdNuW786k0DJd7gSY1ql7CyIaC+vnOdJyrWz3XF8yjL7zfBqFCcrLBu3EVHJ3UVRBV70BaNXUenjSdvcVMdxr37klddGlrF74U11AG6s8LRmqcsvtEbdRILURX7FmbofbWprmy+yqqoyXD1UWTVcyHv0W9S27K5A4fwev44x0eclfXWOc+B8M3fNbgd9EjNDsQpbcGbyYI2UOsPgEn0/phYvIHmPSq8yHJUFQ8ShusTLI8RWroi0pynSIdHsWshSX0gPDcmX+FLbAPfU+1zw+tYNmw4vDuNQd7YuB0Xd+wA6XbQ4TJCBGwWhzxpnHXw4btRDEPfhV1Bk1akzDSRLSp/QHcQLEsqymn14ru1+TDoNEsNmiG897opCXAY8ijdZJE2r8maL5Exuq</item>
+        <item>RSA.CERT_2:MIIFQTCCAymgAwIBAgIQB4OxXUPRjj1za/6h8EprvzANBgkqhkiG9w0BAQsFADAbMRkwFwYDVQQFExBmOTIwMDllODUzYjZiMDQ1MB4XDTIwMTIyMTE4NDYyMloXDTMwMTIxOTE4NDYyMlowOTEMMAoGA1UEDAwDVEVFMSkwJwYDVQQFEyBlYTA5YTI5YmE4ZjZkZGYyMWY4OTJhYjBjNGQ2ZGZkNzCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBAKWX2hqp9XBLWnUwpqGHJuFV8ihfykBpcIVDv49dBPmgdEezgLqn7HZQjQW3fUnsq1HXpcWx7hAadtuRTIQfvb0otrARWDdNn6l8+6S8FYarDrl/V03D/WshN5AwoFnDwgEiQcvuME3OGmBhId07he1RgkqBwBEuvG3fsouaUwXKgCI7ptGmme592TwcYKFfbpRZRhwjEonl9BiGLopV8tD6FFrTqPoSFMRhfExvh4iys0BWiX6flnlwdaRR8Vy2kic8Dm8JyElXE+E/Q6/YEfXjqGcrGPJY0w6tKoaRQHNT26nkvMqRXTbrYLDn9p+yHdhGvZiFAnwekKBPO7N660i+7wyRvJjd3V9f2+r/gxlAlMSO4lxBftLLOXh6I846Bb+TZg/v4Nl/GhRdbnsi9GqtF0zu5IYaegddUocY+aXuZI+AQyshTSlHwY5X+/l4aTGqFsYl47XdP9KAYtejpVHDVbvdtJ41Vx6X4fS26eytx36DhU0OsAp51UvBpAydiSrWdeyTKPXlBIX59Ufut+IKIRYh6vqKl7J7TyUGTLe6dr+eAX7PubZOCTScDLq//iZ8my0LWkd24mLW5TxLbCl17h1SYbbUrpg5XoMlT8Egbg0OmZ0psr/b4T69G3ChBDQv+fNv5Z2jG1yd9IrxxxYvp2UOdOnFxj8Vmk9FiaLbAgMBAAGjYzBhMB0GA1UdDgQWBBSPMNRHwyuCRwwd8Db6IPyq5zOjFDAfBgNVHSMEGDAWgBQ2YeEAfIgFCVGLRGxH/xpMyepPEjAPBgNVHRMBAf8EBTADAQH/MA4GA1UdDwEB/wQEAwICBDANBgkqhkiG9w0BAQsFAAOCAgEAj7cosAJZathi+ad8gyM5SaLK4CJqBmHDIX4OS2unwjv5Uwi7+TFk237C4QmhQeVcapesWxkXS4WRL8gHuMvDkcF19TWLYa37sxAsE/juSosal3bgyqJljId5EL7GxZG24THMbGEbm5JvbtoIeC3ImrC7YjThmsPcOiz/dXFmMrBol/St4zmPNW3+qFPVXegC9CbewlvvkDfCERGIFyF3IaVK9ZDTatxIJKs3dH8XhKgapguhiLeppPizzqNEj+4cbBUZLBQ6MdohcxDXuRL1uQVzD7FSTdfh9mwYbQYziqGyVadhfUzW1Osrd9HAlhslv8tDT0aXUqhptCVAVdRWLPHB5IqCF1MaGBk7KTOCdsNASCrJjX4I/g2YZR6J5clw6dDJfKOBLWrfH1DEO95NuoRyfqRmDLarlwr+Dkowycn3GfihoyZ4eMfTaR27GPmu6pfUxP7pofVv0glee5e0PzNPkXyJPeFGWZ2YorapGGsfKYA3X+AdT1AkwDdrJ0e5GI6yZ0UIwMwtpeNMuQu/i5LzELNtaWFAimR6DlI5WsQlc6gr7Atfrc+uN+MG7nQveIukKjGCtLaVzqQKha03koq3RdkBS/o9oJjzAtgITyIoQ90jaS3XKqvyCMtbP8pvpv8w/L2NknnH2kL7bekQ8B6HdA2udohdttf4VQX9S6s=</item>
+        <item>RSA.CERT_3:MIIFHDCCAwSgAwIBAgIJANUP8luj8tazMA0GCSqGSIb3DQEBCwUAMBsxGTAXBgNVBAUTEGY5MjAwOWU4NTNiNmIwNDUwHhcNMTkxMTIyMjAzNzU4WhcNMzQxMTE4MjAzNzU4WjAbMRkwFwYDVQQFExBmOTIwMDllODUzYjZiMDQ1MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAr7bHgiuxpwHsK7Qui8xUFmOr75gvMsd/dTEDDJdSSxtf6An7xyqpRR90PL2abxM1dEqlXnf2tqw1Ne4Xwl5jlRfdnJLmN0pTy/4lj4/7tv0Sk3iiKkypnEUtR6WfMgH0QZfKHM1+di+y9TFRtv6y//0rb+T+W8a9nsNL/ggjnar86461qO0rOs2cXjp3kOG1FEJ5MVmFmBGtnrKpa73XpXyTqRxB/M0n1n/W9nGqC4FSYa04T6N5RIZGBN2z2MT5IKGbFlbC8UrW0DxW7AYImQQcHtGl/m00QLVWutHQoVJYnFPlXTcHYvASLu+RhhsbDmxMgJJ0mcDpvsC4PjvB+TxywElgS70vE0XmLD+OJtvsBslHZvPBKCOdT0MS+tgSOIfga+z1Z1g7+DVagf7quvmag8jfPioyKvxnK/EgsTUVi2ghzq8wm27ud/mIM7AY2qEORR8Go3TVB4HzWQgpZrt3i5MIlCaY504LzSRiigHCzAPlHws+W0rB5N+er5/2pJKnfBSDiCiFAVtCLOZ7gLiMm0jhO2B6tUXHI/+MRPjy02i59lINMRRev56GKtcd9qO/0kUJWdZTdA2XoS82ixPvZtXQpUpuL12ab+9EaDK8Z4RHJYYfCT3Q5vNAXaiWQ+8PTWm2QgBR/bkwSWc+NpUFgNPN9PvQi8WEg5UmAGMCAwEAAaNjMGEwHQYDVR0OBBYEFDZh4QB8iAUJUYtEbEf/GkzJ6k8SMB8GA1UdIwQYMBaAFDZh4QB8iAUJUYtEbEf/GkzJ6k8SMA8GA1UdEwEB/wQFMAMBAf8wDgYDVR0PAQH/BAQDAgIEMA0GCSqGSIb3DQEBCwUAA4ICAQBOMaBc8oumXb2voc7XCWnuXKhBBK3e2KMGz39t7lA3XXRe2ZLLAkLM5y3J7tURkf5a1SutfdOyXAmeE6SRo83Uh6WszodmMkxK5GM4JGrnt4pBisu5igXEydaW7qq2CdC6DOGjG+mEkN8/TA6p3cnoL/sPyz6evdjLlSeJ8rFBH6xWyIZCbrcpYEJzXaUOEaxxXxgYz5/cTiVKN2M1G2okQBUIYSY6bjEL4aUN5cfo7ogP3UvliEo3Eo0YgwuzR2v0KR6C1cZqZJSTnghIC/vAD32KdNQ+c3N+vl2OTsUVMC1GiWkngNx1OO1+kXW+YTnnTUOtOIswUP/Vqd5SYgAImMAfY8U9/iIgkQj6T2W6FsScy94IN9fFhE1UtzmLoBIuUFsVXJMTz+Jucth+IqoWFua9v1R93/k98p41pjtFX+H8DslVgfP097vju4KDlqN64xV1grw3ZLl4CiOe/A91oeLm2UHOq6wn3esB4r2EIQKb6jTVGu5sYCcdWpXr0AUVqcABPdgL+H7qJguBw09ojm6xNIrw2OocrDKsudk/okr/AwqEyPKw9WnMlQgLIKw1rODG2NvU9oR3GVGdMkUBZutL8VuFkERQGt6vQ2OCw0sV47VMkuYbacK/xyZFiRcrPJPb41zgbQj9XAEyLKCHex0SdDrx+tWUDqG8At2JHA==</item>
+    </string-array>
+
+    <!-- These are system packages exempted from privacy indicator -->
+    <string-array name="config_indicatorExemptedPackageNames" translatable="false">
+        <item>com.android.bluetooth</item>
+        <item>com.android.cellbroadcastservice</item>
+        <item>com.android.mms.service</item>
+        <item>com.android.networkstack.tethering</item>
+        <item>com.android.ons</item>
+        <item>com.android.phone</item>
+        <item>com.android.printspooler</item>
+        <item>com.android.providers.telephony</item>
+        <item>com.android.stk</item>
+        <item>com.android.systemui</item>
+        <item>com.google.android.settings.intelligence</item>
+        <item>com.mediatek.ims</item>
+        <item>com.qualcomm.qti.cne</item>
+        <item>com.shannon.imsservice</item>
+    </string-array>
+
+</resources>

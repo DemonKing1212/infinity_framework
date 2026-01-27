@@ -1,0 +1,66 @@
+package: "com.android.server.power.optimization"
+container: "system"
+
+flag {
+    name: "power_monitor_api"
+    is_exported: true
+    namespace: "backstage_power"
+    description: "Feature flag for ODPM API"
+    bug: "295027807"
+}
+
+flag {
+    name: "streamlined_connectivity_battery_stats"
+    namespace: "backstage_power"
+    description: "Feature flag for streamlined connectivity battery stats"
+    bug: "323970018"
+    is_exported: true
+}
+
+flag {
+    name: "add_battery_usage_stats_slice_atom"
+    namespace: "backstage_power"
+    description: "Adds battery_usage_stats_slice atom"
+    bug: "324602949"
+}
+
+flag {
+    name: "disable_composite_battery_usage_stats_atoms"
+    namespace: "backstage_power"
+    description: "Disable deprecated BatteryUsageStatsAtom pulled atom"
+    bug: "324602949"
+}
+
+flag {
+    name: "battery_stats_screen_state_event"
+    namespace: "backstage_power"
+    description: "Guards the battery stats event for screen state changes."
+    bug: "364350206"
+    is_fixed_read_only: true
+}
+
+flag {
+     namespace: "backstage_power"
+     name: "checkin_history_start_time"
+     description: "Add duration limit to battery stats check in (csv) format"
+     bug: "403599628"
+     is_fixed_read_only: true
+}
+
+flag {
+     namespace: "backstage_power"
+     name: "real_checkin_history_start_time"
+     description: "Add duration limit to battery stats real check in (csv) format"
+     bug: "403599628"
+     is_fixed_read_only: true
+}
+
+flag {
+    name: "report_out_of_order_battery_history_events"
+    namespace: "backstage_power"
+    description: "Generate a Log.wtf when an out-of-order event is written to battery history"
+    bug: "407828438"
+    metadata {
+        purpose: PURPOSE_BUGFIX
+    }
+}
