@@ -25,7 +25,7 @@ import com.android.systemui.dagger.SysUISingleton
 import com.android.systemui.dagger.qualifiers.Application
 import com.android.systemui.res.R
 import com.android.systemui.statusbar.pipeline.ims.data.repository.ImsRepository
-import com.android.systemui.statusbar.pipeline.ims.data.repository.ImsRepositoryStore
+import com.android.systemui.statusbar.pipeline.ims.data.repository.CommonImsRepository
 import com.android.systemui.statusbar.pipeline.mobile.data.model.SubscriptionModel
 import com.android.systemui.statusbar.pipeline.mobile.domain.interactor.MobileIconsInteractor
 import javax.inject.Inject
@@ -48,7 +48,7 @@ class VoLteStatusBarIconViewModel
 @Inject
 constructor(
     interactor: MobileIconsInteractor,
-    imsRepositoryStore: ImsRepositoryStore,
+    imsRepositoryStore: CommonImsRepository,
     @Application scope: CoroutineScope,
 ) :
     BaseImsStatusBarIconViewModel(
@@ -66,12 +66,13 @@ constructor(
         stateSelector = { it.isVoLteAvailable },
     )
 
+
 @SysUISingleton
 class VoWifiStatusBarIconViewModel
 @Inject
 constructor(
     interactor: MobileIconsInteractor,
-    imsRepositoryStore: ImsRepositoryStore,
+    imsRepositoryStore: CommonImsRepository,
     @Application scope: CoroutineScope,
 ) :
     BaseImsStatusBarIconViewModel(
@@ -86,15 +87,15 @@ constructor(
                 dual = R.drawable.ic_nk_vowifi12,
             ),
         contentDescriptionRes = R.string.accessibility_status_bar_vowifi,
-        stateSelector = { it.isVoWifiAvailable },
-    )
+       stateSelector = { it.isVoWifiAvailable },
+     )
 
 @SysUISingleton
 class VoNrStatusBarIconViewModel
 @Inject
 constructor(
     interactor: MobileIconsInteractor,
-    imsRepositoryStore: ImsRepositoryStore,
+    imsRepositoryStore: CommonImsRepository,
     @Application scope: CoroutineScope,
 ) :
     BaseImsStatusBarIconViewModel(
@@ -114,7 +115,7 @@ constructor(
 
 abstract class BaseImsStatusBarIconViewModel(
     interactor: MobileIconsInteractor,
-    imsRepositoryStore: ImsRepositoryStore,
+    imsRepositoryStore: CommonImsRepository,
     scope: CoroutineScope,
     private val iconSet: ImsIconSet,
     @StringRes private val contentDescriptionRes: Int,

@@ -18,6 +18,8 @@ package com.android.systemui.statusbar.pipeline.ims.data.model
 import android.telephony.ims.feature.MmTelFeature
 import android.telephony.ims.stub.ImsRegistrationImplBase.REGISTRATION_TECH_IWLAN
 import android.telephony.ims.stub.ImsRegistrationImplBase.REGISTRATION_TECH_NONE
+import android.telephony.ims.stub.ImsRegistrationImplBase.REGISTRATION_TECH_LTE
+import android.telephony.ims.stub.ImsRegistrationImplBase.REGISTRATION_TECH_NR
 
 data class ImsStateModel(
     val subId: Int = -1,
@@ -34,5 +36,11 @@ data class ImsStateModel(
 
     fun isVoWifiAvailable(): Boolean =
         isHdVoiceCapable() && registrationTech == REGISTRATION_TECH_IWLAN
+
+fun isVoLteAvailable(): Boolean =
+    isHdVoiceCapable() && registrationTech == REGISTRATION_TECH_LTE
+
+fun isVoNrAvailable(): Boolean =
+    isHdVoiceCapable() && registrationTech == REGISTRATION_TECH_NR
 
 }

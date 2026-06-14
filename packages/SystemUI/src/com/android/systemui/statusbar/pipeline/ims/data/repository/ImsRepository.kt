@@ -51,8 +51,11 @@ import javax.inject.Inject
 interface ImsRepository {
     val subId: Int
     val imsState: StateFlow<ImsStateModel>
-}
 
+    val isVoLteAvailable: StateFlow<Boolean>
+    val isVoWifiAvailable: StateFlow<Boolean>
+    val isVoNrAvailable: StateFlow<Boolean>
+}
 @OptIn(ExperimentalCoroutinesApi::class)
 class ImsRepositoryImpl(
     override val subId: Int,
@@ -185,10 +188,34 @@ class ImsRepositoryImpl(
             .catch { emit(ImsStateModel()) /* on exception, just return default value */ }
             .stateIn(scope, SharingStarted.WhileSubscribed(), ImsStateModel())
 
-    private class NoOpImsRepository(override val subId: Int) : ImsRepository {
-        override val imsState: StateFlow<ImsStateModel> =
-            kotlinx.coroutines.flow.MutableStateFlow(ImsStateModel())
-    }
+           override val isVoLteAvailable: StateFlow<Boolean> =
+    imsState
+        .map { it.isVoLteAvailable() }
+        .stateIn(scope, SharingStarted.WhileSubscribed(), false)
+
+override val isVoWifiAvailable: StateFlow<Boolean> =
+    imsState
+        .map { it.isVoWifiAvailable() }
+        .stateIn(scope, SharingStarted.WhileSubscribed(), false)
+
+override val isVoNrAvailable: StateFlow<Boolean> =
+    imsState
+        .map { it.isVoNrAvailable() }
+        .stateIn(scope, SharingStarted.WhileSubscribed(), false)
+
+private class NoOpImsRepository(override val subId: Int) : ImsRepository {
+    override val imsState: StateFlow<ImsStateModel> =
+        kotlinx.coroutines.flow.MutableStateFlow(ImsStateModel())
+
+    override val isVoLteAvailable: StateFlow<Boolean> =
+        kotlinx.coroutines.flow.MutableStateFlow(false)
+
+    override val isVoWifiAvailable: StateFlow<Boolean> =
+        kotlinx.coroutines.flow.MutableStateFlow(false)
+
+    override val isVoNrAvailable: StateFlow<Boolean> =
+        kotlinx.coroutines.flow.MutableStateFlow(false)
+}
 
     class Factory
     @Inject
